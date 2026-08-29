@@ -1,0 +1,99 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Tally hero</title>
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="ui.css">
+<style>
+  #pc { left: 60px; top: 26px; width: 760px; height: 410px; }
+  .pair { position: absolute; inset: 0; background: var(--color-bg-surface); display: grid; justify-items: center; align-content: center; text-align: center; }
+  .qr { width: 150px; height: 150px; padding: 12px; border-radius: 16px; background: #fff; }
+  .qr img, .pqr img { width: 100%; height: 100%; display: block; }
+  .pair h2 { margin: 18px 0 6px; font: 600 24px/1.1 var(--font-display); letter-spacing: -0.022em; }
+  .pair p { margin: 0; color: var(--color-text-muted); font-size: 14px; }
+  .ways { display: flex; gap: 8px; margin-top: 16px; }
+  .ways span { display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 12px; border-radius: 14px; background: var(--color-fill-quiet); font-size: 12.5px; font-weight: 500; }
+  #live { left: 92px; top: 12px; }
+  #stats { right: 14px; top: 13px; }
+  #dock { left: 50%; bottom: 14px; transform: translateX(-50%); }
+  #ph { left: 900px; top: 30px; }
+  .ps { position: absolute; inset: 0; }
+  .scan { background: #1a1a1c; display: grid; place-items: center; }
+  .pqr { width: 104px; height: 104px; padding: 8px; background: #fff; border-radius: 10px; transform: perspective(300px) rotateX(14deg); }
+  .banner { position: absolute; left: 10px; right: 10px; top: 50px; height: 54px; border-radius: 16px; display: flex; align-items: center; gap: 10px; padding: 0 12px; background: rgb(58 58 60 / 0.96); font-size: 12px; }
+  .banner b { display: block; font-size: 12.5px; }
+  .banner span { color: var(--color-text-muted); }
+  .web { background: #101012; padding: 64px 16px 0; display: grid; align-content: start; justify-items: center; text-align: center; }
+  .web h3 { margin: 14px 0 6px; font: 600 19px/1.15 var(--font-display); letter-spacing: -0.02em; }
+  .web p { margin: 0 0 18px; color: var(--color-text-muted); font-size: 12px; line-height: 1.4; }
+  .web .btn { width: 100%; }
+  .opt { width: 100%; display: flex; justify-content: space-between; align-items: center; height: 40px; padding: 0 12px; margin-bottom: 8px; border-radius: 12px; background: var(--color-fill-quiet); font-size: 12.5px; font-weight: 500; }
+  .sw { width: 34px; height: 20px; border-radius: 10px; background: #30d158; position: relative; }
+  .sw::after { content: ""; position: absolute; right: 2px; top: 2px; width: 16px; height: 16px; border-radius: 50%; background: #fff; }
+  .remote { background: #000; display: grid; align-content: center; justify-items: center; gap: 10px; text-align: center; }
+  .remote .live { position: static; }
+  .remote p { margin: 0; padding: 0 22px; color: var(--color-text-muted); font-size: 11.5px; line-height: 1.4; }
+  .keys { position: absolute; left: 0; right: 0; bottom: 30px; display: flex; justify-content: center; gap: 8px; }
+  .keys span { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: var(--color-fill-selected); }
+  .keys span.x { background: var(--red-600); }
+  .copy { position: absolute; left: 0; right: 0; bottom: 30px; text-align: center; }
+  .copy h1 { margin: 0; font: 600 48px/1.06 var(--font-display); letter-spacing: -0.03em; }
+  .copy p { margin: 10px 0 0; font-size: 18px; color: var(--color-text-muted); letter-spacing: -0.012em; }
+  .fine { position: absolute; right: 60px; top: 442px; font-size: 11px; color: var(--color-text-muted); letter-spacing: 0; }
+  .brand { position: absolute; left: 60px; top: 446px; display: flex; align-items: center; gap: 8px; font: 600 19px/1 var(--font-display); letter-spacing: -0.02em; }
+</style>
+<div class="win" id="pc">
+  <div id="feed"></div>
+  <div class="pair" id="pair">
+    <div class="qr"><img src="qr.svg" alt=""></div>
+    <h2>Scan with your phone's camera</h2>
+    <p>iPhone or Android. Nothing to install on it.</p>
+    <div class="ways" id="ways"></div>
+  </div>
+  <div class="lights"><i></i><i></i><i></i></div>
+  <div id="hud"></div>
+</div>
+<div id="phwrap"></div>
+<div class="brand"><span id="logo"></span>Tally</div>
+<div class="fine">Mockup. Sample photo by Shixart1985, CC BY 2.0.</div>
+<div class="copy"><h1 id="h"></h1><p id="s"></p></div>
+<script src="kit.js"></script>
+<script src="ui.js"></script>
+<script>
+  const { frame, phone, FEED, BRAND } = Kit;
+  const { icon, live, stats, dock, ease, easeIO, span } = UI;
+  const $ = (id) => document.getElementById(id);
+  $('logo').innerHTML = Kit.iconSVG({ size: 28, small: true, uid: 'lg' });
+  $('h').textContent = BRAND.headline;
+  $('s').textContent = BRAND.sub;
+  $('ways').innerHTML = `<span>${icon('wifi', 14)}Same Wi-Fi</span><span>${icon('usb', 14)}Or a USB cable</span>`;
+  const W = 196;
+  $('phwrap').innerHTML = phone(`
+    <div class="ps scan" id="p1"><div class="pqr"><img src="qr.svg" alt=""></div>
+      <div class="banner" id="banner">${Kit.iconSVG({ size: 30, small: true, uid: 'b' })}<div><b>Tally pairing page</b><span>Open in browser</span></div></div></div>
+    <div class="ps web" id="p2">${Kit.iconSVG({ size: 52, small: true, uid: 'w' })}<h3>Use this phone as a webcam</h3><p>Video goes straight to your PC over Wi-Fi.</p>
+      <div class="opt">Rear camera<i class="sw"></i></div><div class="opt">Dim screen<i class="sw"></i></div><div class="btn solid" id="start">Start camera</div></div>
+    <div class="ps remote" id="p3">${live('Zoom')}<p>Screen dimmed to save battery. Tap to wake.</p>
+      <div class="keys"><span>${icon('mic', 17)}</span><span>${icon('blur', 17)}</span><span>${icon('swap', 17)}</span><span class="x">${icon('end', 17)}</span></div></div>
+    <div class="tap" id="tap" style="opacity:0"></div>`, { w: W });
+  $('ph').style.cssText += 'left:900px;top:30px';
+  // Scan, open the page, start the camera, go live, then centre framing crops in on the wave.
+  window.seek = (t) => {
+    const back = span(t, 8.3, 8.9);
+    const page = span(t, 1.3, 1.5) * (1 - span(t, 2.6, 2.8)), rem = span(t, 2.6, 2.9) * (1 - back);
+    $('p1').style.opacity = 1 - span(t, 1.3, 1.5) + back;
+    $('p2').style.opacity = page;
+    $('p3').style.opacity = rem;
+    $('banner').style.transform = `translateY(${-80 * (1 - ease(span(t, 0.4, 0.8)))}px)`;
+    const tp = $('tap');
+    if (t >= 1.05 && t < 1.35) { tp.style.opacity = 1 - span(t, 1.05, 1.35); tp.style.left = '90px'; tp.style.top = '77px'; }
+    else if (t >= 2.25 && t < 2.55) { tp.style.opacity = 1 - span(t, 2.25, 2.55); tp.style.left = '89px'; tp.style.top = '292px'; }
+    else tp.style.opacity = 0;
+    const on = span(t, 2.7, 3.2) * (1 - back);
+    const z = 1 + 0.42 * easeIO(span(t, 3.8, 5.2)) * (1 - back);
+    $('feed').innerHTML = frame(FEED, z);
+    $('feed').style.opacity = on;
+    $('pair').style.opacity = 1 - on;
+    $('hud').innerHTML = on > 0.01 ? `<div style="opacity:${on}">${live('Zoom').replace('class="hud live"', 'class="hud live" id="live"')}${stats(['1080p', '30 fps', '41 ms']).replace('class="stats"', 'class="stats" id="stats"')}${dock(t >= 3.7 && back < 0.5 ? ['Center framing'] : []).replace('class="hud dock"', 'class="hud dock" id="dock"')}</div>` : '';
+  };
+  seek(0);
+</script>
