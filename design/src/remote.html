@@ -1,0 +1,58 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Tally: phone as remote</title>
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="ui.css">
+<style>
+  #pc { left: 24px; top: 24px; width: 690px; height: 652px; background: var(--color-bg-surface); }
+  .vid { position: absolute; left: 0; right: 0; top: 0; height: 330px; }
+  #live { left: 92px; top: 12px; }
+  .pane { position: absolute; left: 0; right: 0; top: 330px; bottom: 0; padding: 18px 22px; border-top: 1px solid var(--color-separator); }
+  .pane h3 { margin: 0 0 4px; font: 600 17px/1.2 var(--font-display); letter-spacing: -0.016em; display: flex; justify-content: space-between; align-items: center; }
+  .pane p { margin: 0 0 12px; color: var(--color-text-muted); font-size: 13px; }
+  .script { height: 190px; padding: 14px 16px; border-radius: 12px; background: var(--color-bg-raised); font-size: 14px; line-height: 1.55; color: var(--color-text-muted); overflow: hidden; }
+  .script b { color: var(--color-text-primary); font-weight: 500; }
+  .speed { display: flex; align-items: center; gap: 10px; margin-top: 12px; font-size: 12.5px; color: var(--color-text-muted); }
+  .speed i { flex: 1; height: 4px; border-radius: 2px; background: var(--color-fill-selected); position: relative; }
+  .speed i::after { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 40%; border-radius: 2px; background: var(--color-text-primary); }
+  #ph { left: 770px; top: 30px; }
+  .pr { position: absolute; inset: 0; background: #000; }
+  .lines { position: absolute; left: 18px; right: 18px; top: 72px; font: 600 21px/1.32 var(--font-display); letter-spacing: -0.012em; }
+  .lines div { color: rgb(245 245 247 / 0.32); }
+  .lines div.now { color: var(--color-text-primary); }
+  .eye { position: absolute; left: 50%; top: 46px; width: 120px; margin-left: -60px; text-align: center; font-size: 10.5px; color: var(--color-text-muted); }
+  .ctl { position: absolute; left: 0; right: 0; bottom: 26px; display: grid; justify-items: center; gap: 12px; }
+  .ctl .row { display: flex; gap: 12px; }
+  .ctl .row span { width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; background: var(--color-fill-selected); }
+  .ctl .row span.on { background: var(--color-toggle-on); color: var(--color-toggle-on-label); }
+  .ctl .row span.x { background: var(--red-600); }
+  .ctl .live { position: static; }
+  .credit { left: 30px; bottom: 6px; }
+</style>
+<div class="win" id="pc">
+  <div class="vid" id="vid"></div>
+  <div class="lights"><i></i><i></i><i></i></div>
+  <div id="hud"></div>
+  <div class="pane">
+    <h3>Prompter<span class="btn">Paste script</span></h3>
+    <p>The script scrolls on your phone, right under the lens, so you look at the camera while you read.</p>
+    <div class="script" id="script"></div>
+    <div class="speed">Speed<i></i>Follows your voice</div>
+  </div>
+</div>
+<div id="phwrap"></div>
+<div class="credit">Mockup. Sample photo by Shixart1985, CC BY 2.0.</div>
+<script src="kit.js"></script>
+<script src="ui.js"></script>
+<script>
+  const { frame, phone, FEED } = Kit;
+  const { icon, live } = UI;
+  const $ = (id) => document.getElementById(id);
+  $('vid').innerHTML = frame(FEED, 1.3);
+  $('hud').innerHTML = live('Meet').replace('class="hud live"', 'class="hud live" id="live"');
+  const LINES = ['Hi everyone, thanks for joining.', 'Quick update before the demo:', 'the new build shipped on Friday,', 'and crash reports are down by half.', 'Let me show you what changed.'];
+  $('script').innerHTML = LINES.map((l, i) => i === 2 ? `<b>${l}</b>` : l).join(' ');
+  $('phwrap').innerHTML = phone(`<div class="pr"><div class="eye">Camera is here</div>
+    <div class="lines">${LINES.map((l, i) => `<div class="${i === 2 ? 'now' : ''}">${l}</div>`).join('')}</div>
+    <div class="ctl">${live('Meet')}<div class="row"><span>${icon('mic', 20)}</span><span class="on">${icon('frame', 20)}</span><span>${icon('blur', 20)}</span><span class="x">${icon('end', 20)}</span></div></div></div>`, { w: 300 });
+</script>
