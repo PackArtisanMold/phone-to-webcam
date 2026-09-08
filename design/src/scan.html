@@ -1,0 +1,69 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Tally: scan and go</title>
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="ui.css">
+<style>
+  #pc { left: 24px; top: 24px; width: 700px; height: 652px; background: var(--color-bg-surface); }
+  .head { position: absolute; left: 0; right: 0; top: 0; height: 52px; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid var(--color-separator); font: 600 15px/1 var(--font-display); }
+  .body { position: absolute; left: 36px; right: 36px; top: 84px; }
+  .ok { display: flex; align-items: center; gap: 14px; padding: 16px 18px; border-radius: 14px; background: var(--color-bg-raised); }
+  .ok > div > b { display: block; font: 600 20px/1.15 var(--font-display); letter-spacing: -0.02em; }
+  .ok > div > span { color: var(--color-text-muted); font-size: 13px; }
+  .ok .live { position: static; margin-left: auto; }
+  h3 { margin: 26px 0 10px; font-size: 13px; font-weight: 600; color: var(--color-text-muted); }
+  .apps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .apps span { display: flex; align-items: center; gap: 8px; height: 40px; padding: 0 12px; border-radius: 10px; background: var(--color-fill-quiet); font-weight: 500; }
+  .apps .ic { color: #30d158; }
+  .row { display: flex; align-items: center; gap: 12px; padding: 13px 0; border-top: 1px solid var(--color-separator); }
+  .row:first-of-type { border-top: 0; }
+  .row b { display: block; font-weight: 600; font-size: 13.5px; }
+  .row small { display: block; color: var(--color-text-muted); font-size: 12.5px; }
+  .row .grow { flex: 1; min-width: 0; }
+  .row .ic { color: var(--color-text-muted); }
+  code { font: 500 12px/1 var(--font-text); padding: 6px 9px; border-radius: 7px; background: var(--color-fill-quiet); color: var(--color-text-primary); }
+  #ph { left: 790px; top: 30px; }
+  .cam { position: absolute; inset: 0; }
+  .cam .feed img { object-position: 60% 30%; }
+  .top { position: absolute; left: 12px; right: 12px; top: 50px; display: flex; justify-content: space-between; z-index: 3; }
+  .top .live, .top .chip { position: static; }
+  .lenses { position: absolute; left: 50%; bottom: 128px; transform: translateX(-50%); display: flex; gap: 6px; padding: 4px; border-radius: 18px; z-index: 3; }
+  .lenses span { width: 34px; height: 28px; border-radius: 14px; display: grid; place-items: center; font-size: 12px; font-weight: 700; }
+  .lenses span.on { background: var(--color-toggle-on); color: var(--color-toggle-on-label); }
+  .ctl { position: absolute; left: 0; right: 0; bottom: 0; height: 112px; display: flex; align-items: center; justify-content: space-around; padding: 0 18px 10px; background: rgb(0 0 0 / 0.72); z-index: 3; }
+  .ctl span { width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; background: var(--color-fill-selected); }
+  .ctl span.x { background: var(--red-600); }
+  .credit { left: 30px; bottom: 6px; }
+</style>
+<div class="win" id="pc">
+  <div class="lights"><i></i><i></i><i></i></div>
+  <div class="head">Tally</div>
+  <div class="body">
+    <div class="ok"><div id="okic"></div><div><b>iPhone 13 is connected</b><span>Rear camera, 1080p at 30 fps, over Wi-Fi</span></div><div id="live"></div></div>
+    <h3>Pick "Tally Camera" in any app</h3>
+    <div class="apps" id="apps"></div>
+    <h3>Other ways in</h3>
+    <div id="rows"></div>
+  </div>
+</div>
+<div id="phwrap"></div>
+<div class="credit">Mockup. Sample photo by Shixart1985, CC BY 2.0.</div>
+<script src="kit.js"></script>
+<script src="ui.js"></script>
+<script>
+  const { frame, phone, FEED } = Kit;
+  const { icon, live, stats } = UI;
+  const $ = (id) => document.getElementById(id);
+  $('okic').innerHTML = Kit.iconSVG({ size: 46, uid: 'ok' });
+  $('live').innerHTML = live('Zoom');
+  $('apps').innerHTML = ['Zoom', 'Teams', 'Google Meet', 'Discord', 'OBS Studio', 'Your browser'].map((a) => `<span>${icon('check', 15, 2.4)}${a}</span>`).join('');
+  $('rows').innerHTML = [
+    ['usb', 'USB cable', 'Plug in an Android phone. It charges while it streams, and Wi-Fi drops stop mattering.', ''],
+    ['scan', 'OBS without a driver', 'Add this link as a Browser Source.', '<code>localhost:4455/cam/1</code>'],
+    ['plus', 'Another phone', 'Scan the code again to add a second angle.', '<div class="btn">Show code</div>'],
+  ].map(([ic, a, b, x]) => `<div class="row">${icon(ic, 20)}<div class="grow"><b>${a}</b><small>${b}</small></div>${x}</div>`).join('');
+  $('phwrap').innerHTML = phone(`<div class="cam">${frame(FEED, 1.15)}
+    <div class="top">${live('Zoom')}<span class="hud chip">1080p</span></div>
+    <div class="hud lenses"><span>.5</span><span class="on">1×</span><span>2</span></div>
+    <div class="ctl"><span>${icon('torch', 19)}</span><span>${icon('mic', 19)}</span><span>${icon('swap', 19)}</span><span class="x">${icon('end', 19)}</span></div></div>`, { w: 300 });
+</script>
