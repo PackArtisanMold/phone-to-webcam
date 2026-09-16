@@ -1,0 +1,50 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Tally: studio</title>
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="ui.css">
+<style>
+  #pc { inset: 14px; }
+  #live { left: 92px; top: 12px; }
+  #stats { right: 236px; top: 13px; }
+  #dock { left: calc(50% - 110px); bottom: 16px; transform: translateX(-50%); }
+  .pip { position: absolute; left: 18px; bottom: 76px; width: 236px; height: 150px; border-radius: 12px; overflow: hidden; box-shadow: 0 0 0 1.5px rgb(255 255 255 / 0.5), 0 10px 30px rgb(0 0 0 / 0.5); }
+  .pip .feed img { transform: perspective(600px) rotateX(18deg) scale(1.25); transform-origin: 50% 70%; }
+  .rail { position: absolute; right: 12px; top: 12px; bottom: 12px; width: 212px; border-radius: 16px; padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+  .rail h4 { margin: 2px 4px 0; font-size: 12px; font-weight: 600; color: var(--color-text-muted); }
+  .cam { position: relative; height: 112px; border-radius: 10px; overflow: hidden; box-shadow: 0 0 0 1px rgb(255 255 255 / 0.14); }
+  .cam.air { box-shadow: 0 0 0 2px var(--color-live); }
+  .cam .lab { position: absolute; left: 6px; bottom: 6px; right: 6px; display: flex; align-items: center; gap: 6px; height: 24px; padding: 0 8px; border-radius: 12px; font-size: 11.5px; font-weight: 600; background: var(--color-bg-hud); }
+  .cam .lab small { margin-left: auto; color: var(--color-text-muted); font-weight: 500; font-size: 11px; }
+  .cam .lab i { width: 7px; height: 7px; border-radius: 50%; background: var(--color-live); }
+  .add { height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; gap: 7px; font-weight: 600; font-size: 12.5px; box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.16); color: var(--color-text-muted); }
+  .gpu { margin-top: auto; padding: 10px; border-radius: 10px; background: var(--color-fill-quiet); display: grid; gap: 3px; }
+  .gpu b { display: flex; align-items: center; gap: 7px; font-size: 12.5px; }
+  .gpu span { font-size: 11.5px; color: var(--color-text-muted); }
+  .rail .credit { position: static; text-shadow: none; color: var(--color-text-muted); white-space: normal; line-height: 1.35; }
+</style>
+<div class="win" id="pc">
+  <div id="main"></div>
+  <div class="lights"><i></i><i></i><i></i></div>
+  <div id="hud"></div>
+  <div class="pip" id="pip"></div>
+  <div class="hud rail" id="rail"></div>
+</div>
+<script src="kit.js"></script>
+<script src="ui.js"></script>
+<script>
+  const { frame, FEED, DESK } = Kit;
+  const { icon, live, stats, dock } = UI;
+  const $ = (id) => document.getElementById(id);
+  $('main').innerHTML = frame(FEED, 1.32);
+  $('pip').innerHTML = frame(DESK, 1, { fx: 0.6, fy: 0.5 });
+  $('hud').innerHTML = live('Teams').replace('class="hud live"', 'class="hud live" id="live"') + stats(['1080p', '30 fps', '38 ms']).replace('class="stats"', 'class="stats" id="stats"') + dock(['Center framing', 'Desk view']).replace('class="hud dock"', 'class="hud dock" id="dock"');
+  const cam = (inner, name, dev, air) => `<div class="cam ${air ? 'air' : ''}">${inner}<div class="lab">${air ? '<i></i>' : ''}${name}<small>${dev}</small></div></div>`;
+  $('rail').innerHTML = `<h4>Cameras</h4>
+    ${cam(frame(FEED, 1.6), 'Face', 'iPhone 13', true)}
+    ${cam(frame(DESK, 1, { fx: 0.6, fy: 0.5 }), 'Desk', 'Pixel 8', false)}
+    ${cam(frame(FEED, 1), 'Wide', 'Galaxy A54', false)}
+    <div class="add">${icon('plus', 15)}Add a phone</div>
+    <div class="gpu"><b>${icon('gpu', 15)}Effects on your GPU</b><span>Radeon RX 6700 XT. The phones stay cool.</span></div>
+    <div class="credit">Mockup. Sample photos by Shixart1985, CC BY 2.0.</div>`;
+</script>
