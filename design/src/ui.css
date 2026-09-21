@@ -1,0 +1,46 @@
+@font-face { font-family: Inter; src: url(../fonts/Inter-Variable.ttf); font-weight: 100 900; }
+
+* { box-sizing: border-box; }
+html, body {
+  margin: 0; height: 100%; overflow: hidden;
+  background: var(--color-bg-page); color: var(--color-text-primary);
+  font: 400 13px/1.35 var(--font-text);
+  font-optical-sizing: auto; -webkit-font-smoothing: antialiased; letter-spacing: -0.006em;
+}
+svg { display: block; }
+.ic { flex: none; }
+
+/* The viewfinder window: video edge to edge, controls float on glass. */
+.win { position: absolute; overflow: hidden; border-radius: var(--radius-window); background: #000; box-shadow: 0 0 0 1px rgb(255 255 255 / 0.14), 0 30px 80px rgb(0 0 0 / 0.6); }
+.lights { position: absolute; left: 16px; top: 16px; z-index: 5; display: flex; gap: 8px; }
+.lights i { width: 12px; height: 12px; border-radius: 50%; background: #ff5f57; }
+.lights i:nth-child(2) { background: #febc2e; }
+.lights i:nth-child(3) { background: #28c840; }
+.feed { position: absolute; inset: 0; overflow: hidden; background: #000; }
+.feed img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+
+.hud { background: var(--color-bg-hud); backdrop-filter: blur(18px) saturate(1.4); box-shadow: 0 0 0 1px rgb(255 255 255 / 0.12); }
+.live { position: absolute; display: inline-flex; align-items: center; gap: 7px; height: 30px; padding: 0 13px 0 11px; border-radius: 15px; font-size: 12.5px; white-space: nowrap; }
+.live .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--color-live); box-shadow: 0 0 10px var(--color-live); }
+.live b { font-weight: 700; color: var(--color-live); }
+.live span { color: var(--color-text-primary); font-weight: 500; }
+.stats { position: absolute; display: flex; gap: 6px; }
+.chip { display: inline-flex; align-items: center; height: 26px; padding: 0 10px; border-radius: 13px; font-size: 12px; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.dock { position: absolute; display: flex; align-items: center; gap: 4px; height: 46px; padding: 0 6px; border-radius: 23px; }
+.tog { display: inline-flex; align-items: center; gap: 7px; height: 34px; padding: 0 13px; border-radius: 17px; font-weight: 600; font-size: 12.5px; white-space: nowrap; color: var(--color-text-primary); }
+.tog .ic { color: var(--color-text-muted); }
+.tog.on { background: var(--color-toggle-on); color: var(--color-toggle-on-label); }
+.tog.on .ic { color: var(--color-toggle-on-label); }
+.sep { width: 1px; height: 22px; background: var(--color-separator); margin: 0 4px; }
+
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 36px; padding: 0 16px; border-radius: 18px; font-weight: 600; font-size: 13px; white-space: nowrap; background: var(--color-fill-selected); color: var(--color-text-primary); }
+.btn.solid { background: var(--color-action-solid); color: var(--color-action-label); }
+
+/* Phone frame */
+.phone { position: absolute; border-radius: var(--radius-phone); background: #0b0b0c; padding: 9px; box-shadow: 0 0 0 1.5px #3a3a3c, inset 0 0 0 1px #000, 0 30px 70px rgb(0 0 0 / 0.7); }
+.phone .screen { position: relative; width: 100%; height: 100%; border-radius: calc(var(--radius-phone) - 9px); overflow: hidden; background: #000; }
+.phone .island { position: absolute; left: 50%; top: 18px; width: 30%; height: 22px; margin-left: -15%; border-radius: 11px; background: #000; z-index: 4; }
+
+.cursor { position: absolute; left: 0; top: 0; z-index: 50; filter: drop-shadow(0 2px 3px rgb(0 0 0 / 0.5)); }
+.tap { position: absolute; width: 44px; height: 44px; margin: -22px 0 0 -22px; border-radius: 50%; background: rgb(255 255 255 / 0.35); box-shadow: 0 0 0 2px rgb(255 255 255 / 0.6); pointer-events: none; z-index: 10; }
+.credit { position: absolute; font-size: 11px; color: rgb(245 245 247 / 0.7); text-shadow: 0 1px 2px #000; white-space: nowrap; }
