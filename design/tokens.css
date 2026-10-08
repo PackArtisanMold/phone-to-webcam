@@ -1,0 +1,49 @@
+/* Design tokens. Primitives name a value, semantics name a job.
+   Components use semantic tokens only. Contrast was measured with a WCAG 2 script. */
+
+:root {
+  /* Neutrals */
+  --gray-0: #000000;
+  --gray-850: #1c1c1e;
+  --gray-800: #232326;
+  --gray-750: #2c2c2e;
+  --gray-700: #3a3a3c;
+  --gray-400: #a1a1a6;
+  --gray-50: #f5f5f7;
+
+  /* The tally light. Red means a camera is live, and nothing else. */
+  --red-400: #ff453a;
+  --red-600: #d70015;
+
+  /* Surfaces */
+  --color-bg-page: var(--gray-0);
+  --color-bg-surface: var(--gray-850);
+  --color-bg-raised: var(--gray-750);
+  /* HUD glass sits on video, so it carries its own dark backing. Text on it is measured on #141416. */
+  --color-bg-hud: rgb(20 20 22 / 0.78);
+
+  /* Text. primary on surface 15.63:1, muted on surface 6.61:1, muted on HUD backing 7.15:1 */
+  --color-text-primary: var(--gray-50);
+  --color-text-muted: var(--gray-400);
+
+  /* Lines and fills */
+  --color-separator: rgb(255 255 255 / 0.1);
+  --color-fill-quiet: rgb(255 255 255 / 0.08);
+  --color-fill-selected: rgb(255 255 255 / 0.16);
+
+  /* Roles */
+  --color-live: var(--red-400); /* 5.92:1 on black, used for the dot and the word Live */
+  --color-toggle-on: var(--gray-50);
+  --color-toggle-on-label: var(--gray-0);
+  --color-action-solid: var(--gray-50);
+  --color-action-label: var(--gray-0);
+
+  /* Type. SF Pro is not redistributable, so Apple devices get it from the system and everyone else gets Inter. */
+  --font-display: "SF Pro Display", -apple-system, BlinkMacSystemFont, Inter, sans-serif;
+  --font-text: "SF Pro Text", -apple-system, BlinkMacSystemFont, Inter, sans-serif;
+
+  --radius-control: 8px;
+  --radius-window: 16px;
+  --radius-phone: 44px;
+  --radius-pill: 999px;
+}
