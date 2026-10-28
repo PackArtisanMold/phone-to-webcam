@@ -1,0 +1,10 @@
+# The GitHub "About" box.
+repository:
+  name: phone-to-webcam
+  description: Turn any iPhone or Android into a Windows webcam: scan a code in the phone's browser. No phone app, no watermark.
+  homepage: https://github.com/PackArtisanMold/phone-to-webcam
+  topics: ["webcam", "camera", "windows", "webrtc", "phone", "streaming", "obs", "free"]
+  private: false
+  has_issues: true
+  has_projects: false
+  has_wiki: false
